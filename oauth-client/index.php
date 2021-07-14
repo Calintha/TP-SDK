@@ -10,6 +10,8 @@ const CLIENT_SECRET = "38201ad253c323a79d9108f4588bbc62d2e1a5c6";
 const CLIENT_FBSECRET = "96772e4d50f196966d966d4080507dc8";
 const CLIENT_GITHUBID = "cfe032b750cd65acf337";
 const CLIENT_GITHUBSECRET = "17dfd10cf3c0c810ceb8f6d277f9213ee198c992";
+const CLIENT_DISCORDID = "client_id";
+const CLIENT_DISCORDSECRET = "secret";
 
 function getUser($params)
 {
@@ -44,6 +46,10 @@ function handleLogin()
     echo "<a href='https://github.com/login/oauth/authorize?"
     . "client_id=" . CLIENT_GITHUBID
     . "&scope=user&state=dsdsfsfds&redirect_uri=https://localhost/githubauth-success'>Login with GitHub</a>";
+    echo "<a href='https://discord.com/api/oauth2/authorize?"
+    . "response_type=code"
+    . "&client_id=" . CLIENT_DISCORDID
+    . "&scope=identify%20email&state=dsdsfsfds&redirect_uri=https://localhost/discordauth-success'>Login with Discord</a>";
 }
 
 function handleSuccess()
@@ -113,6 +119,40 @@ function handleGitHubSuccess()
     var_dump($user);
 }
 
+function handleDiscordSuccess()
+{
+    ["code" => $code, "state" => $state] = $_GET;
+    var_dump($code);
+    $data = http_build_query([
+        "client_id"=> CLIENT_DISCORDID,
+        "client_secret"=> CLIENT_DISCORDSECRET,
+        "redirect_uri"=> "https://localhost/discordauth-success",
+        "grant_type"=> "authorization_code",
+        "code"=>$code
+    ]);
+    var_dump($data);
+    // ECHANGE CODE => TOKEN
+    $contextToken = stream_context_create([
+        'http' => [
+            'method' => "POST",
+            'header' => "Content-type: application/x-www-form-urlencoded\r\nContent-Length: " . strlen($data),
+            'content' => $data,
+        ]
+    ]);
+    $result = file_get_contents("https://discord.com/api/oauth2/token", false, $contextToken);
+    $token = json_decode($result, true)["access_token"];
+    // GET USER by TOKEN
+    $context = stream_context_create([
+        'http' => [
+            'method' => "GET",
+            'header' => "Authorization: Bearer " . $token
+        ]
+    ]);
+    $result = file_get_contents("https://discord.com/api/users/@me", false, $context);
+    $user = json_decode($result, true);
+    var_dump($user);
+} 
+
 function handleError()
 {
     echo "refusé";
@@ -134,6 +174,9 @@ switch ($route) {
         break;
     case '/githubauth-success':
         handleGitHubSuccess();
+        break;
+    case '/discordauth-success':
+        handleDiscordSuccess();
         break;
     case '/fbauth-success':
         handleFBSuccess();
