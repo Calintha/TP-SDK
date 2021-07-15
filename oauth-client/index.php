@@ -86,20 +86,22 @@ function handleFBSuccess()
 
 function handleGGSuccess() {
     $code = $_GET['code'];
-    $context = stream_context_create([
-        'http' => [
-            'method' => "POST",
-            'header'  => 'Content-Type: application/x-www-form-urlencoded',
-        ]
-    ]);
-    $content_length = 3495;
     $result = file_get_contents("https://oauth2.googleapis.com/token?"
     . "client_id=" . CLIENT_GGID
     . "&client_secret=" . CLIENT_GGSECRET
     . "&code={$code}"
-    . "&redirect_uri=https://localhost/ggauth-success"
-    . "&grant_type=authorization_code" , true, $context, $content_length);
+    . "&redirect_uri=https://localhost/ggauth-success");
+    
+
+    // $content_length = 3495;
+    // $result = file_get_contents("https://oauth2.googleapis.com/token?"
+    // . "client_id=" . CLIENT_GGID
+    // . "&client_secret=" . CLIENT_GGSECRET
+    // . "&code={$code}"
+    // . "&redirect_uri=https://localhost/ggauth-success"
+    // . "&grant_type=authorization_code" , true, $context, $content_length);
     //$token = json_decode($result, true)["access_token"];
+
     // // GET USER by TOKEN
     // $context = stream_context_create([
     //     'http' => [
