@@ -6,8 +6,10 @@
  */
 const CLIENT_ID = "client_6070546c6aba63.16480463";
 const CLIENT_FBID = "520525662460323";
+const CLIENT_GGID = "809171387774-32vrgt734egk15plshthb5kghfpjq5et.apps.googleusercontent.com";
 const CLIENT_SECRET = "38201ad253c323a79d9108f4588bbc62d2e1a5c6";
 const CLIENT_FBSECRET = "96772e4d50f196966d966d4080507dc8";
+const CLIENT_GGSECRET = "MgKip39x2XqBZnhfqeaIvXjW";
 
 function getUser($params)
 {
@@ -34,11 +36,19 @@ function handleLogin()
     echo "<a href='http://localhost:8081/auth?"
         . "response_type=code"
         . "&client_id=" . CLIENT_ID
-        . "&scope=basic&state=dsdsfsfds'>Login with oauth-server</a>";
+        . "&scope=basic&state=dsdsfsfds'>Se connecter avec oauth-server</a>";
+       
     echo "<a href='https://www.facebook.com/v2.10/dialog/oauth?"
         . "response_type=code"
         . "&client_id=" . CLIENT_FBID
-        . "&scope=email&state=dsdsfsfds&redirect_uri=https://localhost/fbauth-success'>Login with Facebook</a>";
+        . "&scope=email&state=dsdsfsfds&redirect_uri=https://localhost/fbauth-success'>Se connecter avec Facebook</a>";
+       
+    echo "<a href='https://accounts.google.com/o/oauth2/v2/auth?"
+        ."scope=email&"
+        ."access_type=online&"
+        ."response_type=code&"
+        ."client_id=" .CLIENT_GGID
+        ."&redirect_uri=https://localhost/ggauth-success'>Se connecter avec Google</a>";
 }
 
 function handleSuccess()
@@ -60,6 +70,7 @@ function handleFBSuccess()
         . "&client_secret=" . CLIENT_FBSECRET
         . "&redirect_uri=https://localhost/fbauth-success"
         . "&grant_type=authorization_code&code={$code}");
+            
     $token = json_decode($result, true)["access_token"];
     // GET USER by TOKEN
     $context = stream_context_create([
@@ -71,6 +82,34 @@ function handleFBSuccess()
     $result = file_get_contents("https://graph.facebook.com/me?fields=id,name,email", false, $context);
     $user = json_decode($result, true);
     var_dump($user);
+}
+
+function handleGGSuccess() {
+    $code = $_GET['code'];
+    $context = stream_context_create([
+        'http' => [
+            'method' => "POST",
+            'header'  => 'Content-Type: application/x-www-form-urlencoded',
+        ]
+    ]);
+    $content_length = 3495;
+    $result = file_get_contents("https://oauth2.googleapis.com/token?"
+    . "client_id=" . CLIENT_GGID
+    . "&client_secret=" . CLIENT_GGSECRET
+    . "&code={$code}"
+    . "&redirect_uri=https://localhost/ggauth-success"
+    . "&grant_type=authorization_code" , true, $context, $content_length);
+    //$token = json_decode($result, true)["access_token"];
+    // // GET USER by TOKEN
+    // $context = stream_context_create([
+    //     'http' => [
+    //         'method' => "GET",
+    //         'header' => "Authorization: Bearer " . $token
+    //     ]
+    // ]);
+    // $result = file_get_contents("https://openidconnect.googleapis.com/v1/userinfo/?fields=id,name,email", false, $context);
+    // $user = json_decode($result, true);
+    //var_dump($user);
 }
 
 function handleError()
@@ -94,6 +133,9 @@ switch ($route) {
         break;
     case '/fbauth-success':
         handleFBSuccess();
+        break;
+    case '/ggauth-success':
+        handleGGSuccess();
         break;
     case '/auth-error':
         handleError();
