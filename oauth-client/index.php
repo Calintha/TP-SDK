@@ -53,7 +53,6 @@ function handleLogin()
     . "response_type=code"
     . "&client_id=" . CLIENT_DISCORDID
     . "&scope=identify%20email&state=dsdsfsfds&redirect_uri=https://localhost/discordauth-success'>Login with Discord</a>";
-        . "&scope=email&state=dsdsfsfds&redirect_uri=https://localhost/fbauth-success'>Se connecter avec Facebook</a>";
        
     echo "<a href='https://accounts.google.com/o/oauth2/v2/auth?"
         ."scope=email&"
@@ -113,6 +112,24 @@ function handleGitHubSuccess()
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://api.github.com/user',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: token '. $token,
+            'User-Agent: PHP'
+        ),
+    ));
+    $result = curl_exec($curl);
+    curl_close($curl);
+    $user = json_decode($result, true);
+    var_dump($user);
+}
+
 function handleGGSuccess()
 {
     ["code" => $code] = $_GET;
@@ -158,14 +175,18 @@ function handleGGSuccess()
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'GET',
         CURLOPT_HTTPHEADER => array(
-            'Authorization: token '. $token,
-            'User-Agent: PHP'
-        ),
+            'Authorization: Bearer '. $token
+        )
     ));
+
     $result = curl_exec($curl);
+
     curl_close($curl);
+
     $user = json_decode($result, true);
+    echo '<pre>';
     var_dump($user);
+       
 }
 
 function handleDiscordSuccess()
@@ -201,17 +222,6 @@ function handleDiscordSuccess()
     $user = json_decode($result, true);
     var_dump($user);
 } 
-            'Authorization: Bearer '. $token
-        )
-    ));
-
-    $result = curl_exec($curl);
-
-    curl_close($curl);
-
-    $user = json_decode($result, true);
-    var_dump($result);
-}
 
 
 // function handleGGSuccess() {
