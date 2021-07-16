@@ -84,35 +84,101 @@ function handleFBSuccess()
     var_dump($user);
 }
 
-function handleGGSuccess() {
-    $code = $_GET['code'];
-    $result = file_get_contents("https://oauth2.googleapis.com/token?"
-    . "client_id=" . CLIENT_GGID
-    . "&client_secret=" . CLIENT_GGSECRET
-    . "&code={$code}"
-    . "&redirect_uri=https://localhost/ggauth-success");
-    
+function handleGGSuccess()
+{
+    ["code" => $code] = $_GET;
 
-    // $content_length = 3495;
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://oauth2.googleapis.com/token?'
+            . "client_id=" . CLIENT_GGID
+            . "&client_secret=" . CLIENT_GGSECRET
+            . "&code=" . $code
+            . "&redirect_uri=https://localhost/ggauth-success"
+            . "&grant_type=authorization_code",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_HTTPHEADER => array(
+            'Host: oauth2.googleapis.com',
+            'Content-Type: application/x-www-form-urlencoded',
+            'Content-Length: 0'
+        ),
+    ));
+
+    $result = curl_exec($curl);
+
+    curl_close($curl);
+
+    $token = json_decode($result, true)["access_token"];
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://openidconnect.googleapis.com/v1/userinfo',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer '. $token
+        )
+    ));
+
+    $result = curl_exec($curl);
+
+    curl_close($curl);
+
+    $user = json_decode($result, true);
+    var_dump($result);
+}
+
+
+// function handleGGSuccess() {
+//     $code = $_GET['code'];
+
+    // $data = array(
+    //     "client_id" => CLIENT_GGID,
+    //     "client_secret" => CLIENT_GGSECRET,
+    //     "code" => $code,
+    //     "redirect_uri" => "https://localhost/ggauth-success"
+    // );
+    // $data_query = http_build_query($data);
+
+    // $context = stream_context_create( [
+    //     'http' => [
+    //         'method' => 'POST',
+    //         'header' => 'Content-Type: application/x-www-form-urlencoded\r\nContent-Length: '.strlen($data_query).'\r\n'
+    //     ]
+    // ]);
+
     // $result = file_get_contents("https://oauth2.googleapis.com/token?"
     // . "client_id=" . CLIENT_GGID
     // . "&client_secret=" . CLIENT_GGSECRET
     // . "&code={$code}"
-    // . "&redirect_uri=https://localhost/ggauth-success"
-    // . "&grant_type=authorization_code" , true, $context, $content_length);
-    //$token = json_decode($result, true)["access_token"];
+    // . "&redirect_uri=https://localhost/ggauth-success", false, $context);
+    
+    // $token = json_decode($result, true)["access_token"];
 
     // // GET USER by TOKEN
-    // $context = stream_context_create([
+    // $context2 = stream_context_create([
     //     'http' => [
     //         'method' => "GET",
     //         'header' => "Authorization: Bearer " . $token
     //     ]
     // ]);
-    // $result = file_get_contents("https://openidconnect.googleapis.com/v1/userinfo/?fields=id,name,email", false, $context);
+    // $result = file_get_contents("https://openidconnect.googleapis.com/v1/userinfo/?fields=id,name,email", false, $context2);
     // $user = json_decode($result, true);
-    //var_dump($user);
-}
+    // var_dump($user);
+// }
 
 function handleError()
 {
@@ -137,6 +203,12 @@ switch ($route) {
         handleFBSuccess();
         break;
     case '/ggauth-success':
+        // handleGGSuccess("https://oauth2.googleapis.com/token?", array(
+        //         "client_id" => CLIENT_GGID,
+        //         "client_secret" => CLIENT_GGSECRET,
+        //         "code" => $code,
+        //         "redirect_uri" => "https://localhost/ggauth-success"
+        //     ), false);
         handleGGSuccess();
         break;
     case '/auth-error':
