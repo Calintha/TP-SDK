@@ -25,11 +25,11 @@ function getProviders()
     $redirect_uri = 'https://localhost/login';
     return [
         'app' => [
-            'label' => 'Se connecter avec application',
+            'label' => 'Connect with application',
             'instance' => new App(CLIENT_ID, SECRET, "${redirect_uri}?provider=app", ['scope' => 'userinfo', 'state' => 'state_example'])
         ],
         'facebook' => [
-            'label' => 'Se connecter avec Facebook',
+            'label' => 'Connect with Facebook',
             'instance' => new Facebook(CLIENT_FB_CLIENT_ID, CLIENT_FB_SECRET, "${redirect_uri}?provider=facebook")
         ],
     ];
@@ -37,7 +37,7 @@ function getProviders()
 
 function handleResponse(Provider $provider, array $request)
 {
-    if (!$request['params']) die('Accès refusé');
+    if (!$request['params']) die('No access');
     $data = $provider->getUser($request['params']);
     var_dump($data);
 }

@@ -36,7 +36,7 @@ abstract class Provider {
     }
 
     // Get user data with the provider
-    function getUser(string $params) {
+    public function getUser(string $params) {
         $token = $this->getToken($params);
         $context = stream_context_create([
             'http' => [
@@ -44,6 +44,16 @@ abstract class Provider {
                 'header' => "Authorization: Bearer " . $token
             ]
         ]);
-        return $token ? httpRequest($this->api_url), $context : false;
+        return $token ? httpRequest($this->api_url, createStreamContext('GET', "Authorization: Bearer ${token}")) : false;
+    }
+
+    public function getAuthorizeUrl()
+    {
+        return getUrl($this->auth_url, array_merge([
+            'response_type' => 'code',
+            'redirect_uri' => $this->redirect_uri,
+            'client_id' => $this->client_id,
+        ], 
+        $this->options));
     }
 }
