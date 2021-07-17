@@ -1,20 +1,5 @@
 <?php
 
-/**
- * "client_id":"client_6070546c6aba63.16480463"
- * "client_secret":"38201ad253c323a79d9108f4588bbc62d2e1a5c6"
- */
-const CLIENT_ID = "client_6070546c6aba63.16480463";
-const CLIENT_FBID = "520525662460323";
-const CLIENT_GGID = "809171387774-32vrgt734egk15plshthb5kghfpjq5et.apps.googleusercontent.com";
-const CLIENT_SECRET = "38201ad253c323a79d9108f4588bbc62d2e1a5c6";
-const CLIENT_FBSECRET = "96772e4d50f196966d966d4080507dc8";
-const CLIENT_GITHUBID = "cfe032b750cd65acf337";
-const CLIENT_GITHUBSECRET = "17dfd10cf3c0c810ceb8f6d277f9213ee198c992";
-const CLIENT_DISCORDID = "client_id";
-const CLIENT_DISCORDSECRET = "secret";
-const CLIENT_GGSECRET = "MgKip39x2XqBZnhfqeaIvXjW";
-
 function getUser($params)
 {
     $result = file_get_contents("http://oauth-server:8081/token?"
