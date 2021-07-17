@@ -2,5 +2,5 @@
 
 class App extends Provider
 {
-    
+
 }

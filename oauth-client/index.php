@@ -3,6 +3,9 @@ require 'Core/Providers/Provider.php';
 require 'Core/Providers/App.php';
 require 'Core/Providers/Facebook.php';
 
+require 'Core/Constant/constants.php';
+require 'Core/Constant/dotenv.php';
+
 function getLink(string $link, string $label, array $options = [])
 {
     $ref = "<p><a href=${link}>${label}</a></p>";
