@@ -10,14 +10,14 @@ require 'Core/Constant/helpers.php';
 
 function getLink(string $link, string $label, array $options = [])
 {
-    $code = "<p><a href=${link}>${label}</a></p>";
-    return $code;
+    $codeHTML = "<p><a href=${link}>${label}</a></p>";
+    return $codeHTML;
 }
 
 function welcome(array $providers)
 {
     foreach ($providers as $provider) {
-        echo getLink($provider['instance']->getAuthorizeUrl(), $provider['label']);
+        echo getLink($provider['instance']->getAuthorizeUrl(), $provider['connect']);
     }
 }
 
@@ -26,15 +26,15 @@ function getProviders()
     $redirect_uri = 'https://localhost/login';
     return [
         'app' => [
-            'label' => 'Connect with application',
+            'connect' => 'Connect with application',
             'instance' => new App(CLIENT_ID, CLIENT_SECRET, "${redirect_uri}?provider=app", ['scope' => 'userinfo', 'state' => 'state_example'])
         ],
         'facebook' => [
-            'label' => 'Connect with Facebook',
+            'connect' => 'Connect with Facebook',
             'instance' => new Facebook(CLIENT_FB_CLIENT_ID, CLIENT_FB_SECRET, "${redirect_uri}?provider=facebook")
         ],
         'discord' => [
-            'label' => 'Connect with Discord',
+            'connect' => 'Connect with Discord',
             'instance' => new Discord(CLIENT_DISCORD_CLIENT_ID, CLIENT_DISCORD_SECRET, "${redirect_uri}?provider=discord")
         ],
     ];
@@ -42,8 +42,8 @@ function getProviders()
 
 function handleResponse(Provider $provider, array $request)
 {
-    if (!$request['params']) die('No access');
-    $data = $provider->getUser($request['params']);
+    if (!$request['code']) die('Problem response');
+    $data = $provider->getUser($request['code']);
     dd($data);
 }
 
@@ -67,6 +67,22 @@ switch ($route) {
         break;
     case '/logout':
         Provider::logout();
+        break;
+    case '/password':
+        if ($_SERVER['REQUEST_METHOD'] === "GET") {
+            echo "<form method='POST'>";
+            echo "<input name='username'>";
+            echo "<input name='password'>";
+            echo "<input type='submit' value='Log with oauth'>";
+            echo "</form>";
+        } else {
+            ['username' => $username, 'password' => $password] = $_POST;
+            getUser([
+                'grant_type' => "password",
+                'username' => $username,
+                'password' => $password
+            ]);
+        }
         break;
     default:
         http_response_code(404);

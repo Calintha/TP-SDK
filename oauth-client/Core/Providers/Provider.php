@@ -18,12 +18,12 @@ abstract class Provider {
         $this->options = $options;
     }
 
-    // With the params it send the token
-    protected function getToken(string $params, bool $is_post = false)
+    // With the code it send the token
+    protected function getToken(string $code, bool $is_post = false)
     {
         $context = $is_post ? createStreamContext('POST', ['Content-Type: application/x-www-form-urlencoded', 'Content-Length: 0', 'Accept: application/json']) : null;
         $url = createUrl($this->token_url, [
-            'params' => $params,
+            'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'redirect_uri' => $this->redirect_uri,
@@ -37,7 +37,7 @@ abstract class Provider {
     public function getAuthorizationUrl()
     {
         return createUrl($this->auth_url, array_merge([
-            'response_type' => 'code',
+            'response_type' => 'params',
             'redirect_uri' => $this->redirect_uri,
             'client_id' => $this->client_id,
         ], $this->options));
@@ -52,7 +52,7 @@ abstract class Provider {
     public function getAuthorizeUrl()
     {
         return createUrl($this->auth_url, array_merge([
-            'response_type' => 'code',
+            'response_type' => 'params',
             'redirect_uri' => $this->redirect_uri,
             'client_id' => $this->client_id,
         ], 
