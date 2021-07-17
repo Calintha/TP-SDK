@@ -3,6 +3,7 @@ require 'Core/Providers/Provider.php';
 require 'Core/Providers/App.php';
 require 'Core/Providers/Facebook.php';
 require 'Core/Providers/Discord.php';
+require 'Core/Providers/Google.php';
 
 require 'Core/Constant/constants.php';
 require 'Core/Constant/dotenv.php';
@@ -23,7 +24,7 @@ function welcome(array $providers)
 
 function getProviders()
 {
-    $redirect_uri = 'https://localhost/login';
+    $redirect_uri = 'https://localhost:81/login';
     return [
         'app' => [
             'connect' => 'Connect with application',
@@ -36,6 +37,10 @@ function getProviders()
         'discord' => [
             'connect' => 'Connect with Discord',
             'instance' => new Discord(CLIENT_DISCORD_CLIENT_ID, CLIENT_DISCORD_SECRET, "${redirect_uri}?provider=discord")
+        ],
+        'google' => [
+            'connect' => 'Connect with Google',
+            'instance' => new Google(CLIENT_GOOGLE_CLIENT_ID, CLIENT_GOOGLE_SECRET, "${redirect_uri}?provider=google", ['scope' => 'https://www.googleapis.com/auth/userinfo.profile'])
         ],
     ];
 }

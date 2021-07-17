@@ -14,9 +14,9 @@ function createUrl(string $url, array $params = [])
 }
 
 // create headers
-function createStreamContext(string $method, $header)
+function createContext(string $method, $header)
 {
-    return stream_context_create([
+    return context([
         'http' => [
             'method' => $method,
             'header' => $header

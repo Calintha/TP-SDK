@@ -21,7 +21,7 @@ abstract class Provider {
     // With the code it send the token
     protected function getToken(string $code, bool $is_post = false)
     {
-        $context = $is_post ? createStreamContext('POST', ['Content-Type: application/x-www-form-urlencoded', 'Content-Length: 0', 'Accept: application/json']) : null;
+        $context = $is_post ? createContext('POST', ['Content-Type: application/x-www-form-urlencoded', 'Content-Length: 0', 'Accept: application/json']) : null;
         $url = createUrl($this->token_url, [
             'code' => $code,
             'client_id' => $this->client_id,
@@ -33,30 +33,20 @@ abstract class Provider {
         return httpRequest($url, $context)['token'];
     }
 
-    // TODO function generate
-    public function getAuthorizationUrl()
-    {
-        return createUrl($this->auth_url, array_merge([
-            'response_type' => 'params',
-            'redirect_uri' => $this->redirect_uri,
-            'client_id' => $this->client_id,
-        ], $this->options));
-    }
-
-    // Get user data with the provider
-    public function getUser(string $params) {
-        $token = $this->getToken($params);
-        return $token ? httpRequest($this->api_url, createStreamContext('GET', "Authorization: Bearer ${token}")) : false;
-    }
-
     public function getAuthorizeUrl()
     {
         return createUrl($this->auth_url, array_merge([
-            'response_type' => 'params',
+            'response_type' => 'code',
             'redirect_uri' => $this->redirect_uri,
             'client_id' => $this->client_id,
         ], 
         $this->options));
+    }
+    
+    // Get user data with the provider
+    public function getUser(string $params) {
+        $token = $this->getToken($params);
+        return $token ? httpRequest($this->api_url, createContext('GET', "Authorization: Bearer ${token}")) : false;
     }
 
     public static function logout()

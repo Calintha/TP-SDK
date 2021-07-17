@@ -18,3 +18,7 @@ const URL_GITHUB_API = 'https://api.github.com/user';
 const URL_DISCORD_AUTH="https://discord.com/api/oauth2/authorize?";
 const URL_DISCORD_ACCESS_TOKEN="https://discord.com/api/oauth2/token?";
 const URL_DISCORD_API="https://discord.com/api/users/@me";
+// Google api constants
+const URL_GOOGLE_AUTH = 'https://accounts.google.com/o/oauth2/v2/auth';
+const URL_GOOGLE_ACCESS_TOKEN = 'https://oauth2.googleapis.com/token';
+const URL_GOOGLE_API = 'https://www.googleapis.com/oauth2/v1/userinfo';
