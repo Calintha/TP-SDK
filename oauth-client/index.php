@@ -258,50 +258,15 @@ function handleError()
  * => EXCHANGE Code <> Token (auth-success)
  * => GET USER by Token (auth-success)
  */
+loadDotEnv(ENV_PATH);
+$providers = getProviders();
 $route = strtok($_SERVER["REQUEST_URI"], '?');
 switch ($route) {
-    case '/login':
-        handleLogin();
+    case '/':
+        welcome($providers);
         break;
     case '/auth-success':
-        handleSuccess();
-        break;
-    case '/githubauth-success':
-        handleGitHubSuccess();
-        break;
-    case '/discordauth-success':
-        handleDiscordSuccess();
-        break;
-    case '/fbauth-success':
-        handleFBSuccess();
-        break;
-    case '/ggauth-success':
-        // handleGGSuccess("https://oauth2.googleapis.com/token?", array(
-        //         "client_id" => CLIENT_GGID,
-        //         "client_secret" => CLIENT_GGSECRET,
-        //         "code" => $code,
-        //         "redirect_uri" => "https://localhost/ggauth-success"
-        //     ), false);
-        handleGGSuccess();
-        break;
-    case '/auth-error':
-        handleError();
-        break;
-    case '/password':
-        if ($_SERVER['REQUEST_METHOD'] === "GET") {
-            echo "<form method='POST'>";
-            echo "<input name='username'>";
-            echo "<input name='password'>";
-            echo "<input type='submit' value='Log with oauth'>";
-            echo "</form>";
-        } else {
-            ['username' => $username, 'password' => $password] = $_POST;
-            getUser([
-                'grant_type' => "password",
-                'username' => $username,
-                'password' => $password
-            ]);
-        }
+        handleResponse($provider, $_GET);
         break;
     default:
         http_response_code(404);
