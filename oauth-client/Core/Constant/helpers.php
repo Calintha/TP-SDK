@@ -8,7 +8,7 @@ function httpRequest(string $url, $type = null)
 }
 
 // Make url
-function getUrl(string $url, array $params = [])
+function createUrl(string $url, array $params = [])
 {
     return $url . (!empty($params) ? '?' . http_build_query($params) : '');
 }
@@ -22,4 +22,18 @@ function createStreamContext(string $method, $header)
             'header' => $header
         ]
     ]);
+}
+
+function dd(...$data)
+{
+    echo '<pre>';
+    foreach ($data as $value) {
+        if (is_array($value)) {
+            print_r($value);
+        } else {
+            echo $value . PHP_EOL;
+        }
+    }
+    echo '</pre>';
+    die;
 }

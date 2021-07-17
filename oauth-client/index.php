@@ -2,6 +2,7 @@
 require 'Core/Providers/Provider.php';
 require 'Core/Providers/App.php';
 require 'Core/Providers/Facebook.php';
+require 'Core/Providers/Github.php';
 
 require 'Core/Constant/constants.php';
 require 'Core/Constant/dotenv.php';
@@ -13,7 +14,7 @@ function getLink(string $link, string $label, array $options = [])
     return $code;
 }
 
-function welcome() //for each provider echo link and label
+function welcome(array $providers)
 {
     foreach ($providers as $provider) {
         echo getLink($provider['instance']->getAuthorizeUrl(), $provider['label']);
@@ -26,11 +27,15 @@ function getProviders()
     return [
         'app' => [
             'label' => 'Connect with application',
-            'instance' => new App(CLIENT_ID, SECRET, "${redirect_uri}?provider=app", ['scope' => 'userinfo', 'state' => 'state_example'])
+            'instance' => new App(CLIENT_ID, CLIENT_SECRET, "${redirect_uri}?provider=app", ['scope' => 'userinfo', 'state' => 'state_example'])
         ],
         'facebook' => [
             'label' => 'Connect with Facebook',
             'instance' => new Facebook(CLIENT_FB_CLIENT_ID, CLIENT_FB_SECRET, "${redirect_uri}?provider=facebook")
+        ],
+        'github' => [
+            'label' => 'Connect with Github',
+            'instance' => new Github(CLIENT_GITHUB_ID, CLIENT_GITHUBS_SECRET, "${redirect_uri}?provider=github", [], GITHUB_APP)
         ],
     ];
 }
@@ -39,7 +44,7 @@ function handleResponse(Provider $provider, array $request)
 {
     if (!$request['params']) die('No access');
     $data = $provider->getUser($request['params']);
-    var_dump($data);
+    dd($data);
 }
 
 /**
@@ -56,6 +61,8 @@ switch ($route) {
         welcome($providers);
         break;
     case '/login':
+        if (!$provider = $providers[$_GET['provider']]['instance']) 
+        die("The provider {$_GET['provider']} have problem");
         handleResponse($provider, $_GET);
         break;
     default:
