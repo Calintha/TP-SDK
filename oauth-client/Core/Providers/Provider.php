@@ -5,11 +5,13 @@ abstract class Provider {
     protected string $client_secret;
     protected string $token_url;
     protected string $redirect_uri;
+    protected string $api_url;
 
-    protected function __construct(string $client_id, string $client_secret)
+    protected function __construct(string $client_id, string $client_secret, string $redirect_uri)
     {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
+        $this->redirect_uri = $redirect_uri;
     }
 
     // With the params it send the token
@@ -36,6 +38,12 @@ abstract class Provider {
     // Get user data with the provider
     function getUser(string $params) {
         $token = $this->getToken($params);
-        return $token;
+        $context = stream_context_create([
+            'http' => [
+                'method' => "GET",
+                'header' => "Authorization: Bearer " . $token
+            ]
+        ]);
+        return $token ? httpRequest($this->api_url), $context : false;
     }
 }

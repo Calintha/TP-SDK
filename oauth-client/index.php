@@ -5,11 +5,12 @@ require 'Core/Providers/Facebook.php';
 
 require 'Core/Constant/constants.php';
 require 'Core/Constant/dotenv.php';
+require 'Core/Constant/helpers.php';
 
 function getLink(string $link, string $label, array $options = [])
 {
-    $ref = "<p><a href=${link}>${label}</a></p>";
-    return $ref;
+    $code = "<p><a href=${link}>${label}</a></p>";
+    return $code;
 }
 
 function welcome() //for each provider echo link and label
