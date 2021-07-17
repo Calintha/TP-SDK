@@ -6,15 +6,13 @@ abstract class Provider {
     protected string $token_url;
     protected string $redirect_uri;
     protected string $api_url;
-    protected string $api_name;
     protected array $options;
 
-    protected function __construct(string $client_id, string $client_secret, string $redirect_uri, array $options, string $api_name = "")
+    protected function __construct(string $client_id, string $client_secret, string $redirect_uri, array $options)
     {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         $this->redirect_uri = $redirect_uri;
-        $this->api_name = $api_name;
         $this->options = $options;
     }
 
@@ -42,7 +40,7 @@ abstract class Provider {
         ], 
         $this->options));
     }
-    
+
     // Get user data with the provider
     public function getUser(string $params) {
         $token = $this->getToken($params);
