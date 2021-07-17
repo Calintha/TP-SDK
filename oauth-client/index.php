@@ -1,5 +1,7 @@
 <?php
-
+require 'Core/Providers/Provider.php';
+require 'Core/Providers/App.php';
+require 'Core/Providers/Facebook.php';
 
 function getLink(string $link, string $label, array $options = [])
 {
@@ -14,7 +16,7 @@ function welcome() //for each provider echo link and label
     }
 }
 
-function getAllProviders()
+function getProviders()
 {
     $redirect_uri = 'https://localhost/login';
     return [
@@ -29,18 +31,12 @@ function getAllProviders()
     ];
 }
 
-function handleSuccess()
+function handleResponse(Provider $provider, array $request)
 {
-    ["code" => $code, "state" => $state] = $_GET;
-    // ECHANGE CODE => TOKEN
-    getUser([
-        "grant_type" => "authorization_code",
-        "code" => $code
-    ]);
+    if (!$request['params']) die('Accès refusé');
+    $data = $provider->getUser($request['params']);
+    var_dump($data);
 }
-
-
-
 
 /**
  * AUTH_CODE WORKFLOW
