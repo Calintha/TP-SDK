@@ -2,7 +2,7 @@
 require 'Core/Providers/Provider.php';
 require 'Core/Providers/App.php';
 require 'Core/Providers/Facebook.php';
-require 'Core/Providers/Github.php';
+require 'Core/Providers/Discord.php';
 
 require 'Core/Constant/constants.php';
 require 'Core/Constant/dotenv.php';
@@ -33,9 +33,9 @@ function getProviders()
             'label' => 'Connect with Facebook',
             'instance' => new Facebook(CLIENT_FB_CLIENT_ID, CLIENT_FB_SECRET, "${redirect_uri}?provider=facebook")
         ],
-        'github' => [
-            'label' => 'Connect with Github',
-            'instance' => new Github(CLIENT_GITHUB_ID, CLIENT_GITHUBS_SECRET, "${redirect_uri}?provider=github", [], GITHUB_APP)
+        'discord' => [
+            'label' => 'Connect with Discord',
+            'instance' => new Discord(CLIENT_DISCORD_CLIENT_ID, CLIENT_DISCORD_SECRET, "${redirect_uri}?provider=discord")
         ],
     ];
 }
@@ -64,6 +64,9 @@ switch ($route) {
         if (!$provider = $providers[$_GET['provider']]['instance']) 
         die("The provider {$_GET['provider']} have problem");
         handleResponse($provider, $_GET);
+        break;
+    case '/logout':
+        Provider::logout();
         break;
     default:
         http_response_code(404);

@@ -58,4 +58,9 @@ abstract class Provider {
         ], 
         $this->options));
     }
+
+    public static function logout()
+    {
+        header('location: /');
+    }
 }
