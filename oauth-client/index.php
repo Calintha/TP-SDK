@@ -1,20 +1,26 @@
 <?php
+
+// Include all providers and Provider class we need
 require 'Core/Providers/Provider.php';
 require 'Core/Providers/App.php';
 require 'Core/Providers/Facebook.php';
+require 'Core/Providers/Github.php';
 require 'Core/Providers/Discord.php';
 require 'Core/Providers/Google.php';
 
+// Include all function from others class
 require 'Core/Constant/constants.php';
 require 'Core/Constant/dotenv.php';
 require 'Core/Constant/helpers.php';
 
+// Create the provider href with the right information
 function getLink(string $link, string $label, array $options = [])
 {
     $codeHTML = "<p><a href=${link}>${label}</a></p>";
     return $codeHTML;
 }
 
+// Create connection link for each providers with the authorization page url
 function welcome(array $providers)
 {
     foreach ($providers as $provider) {
@@ -22,6 +28,7 @@ function welcome(array $providers)
     }
 }
 
+// Get the right provider redirect url and instance the right credentials for the provider
 function getProviders()
 {
     $redirect_uri = 'https://localhost:81/login';
@@ -42,9 +49,14 @@ function getProviders()
             'connect' => 'Connect with Google',
             'instance' => new Google(CLIENT_GOOGLE_CLIENT_ID, CLIENT_GOOGLE_SECRET, "${redirect_uri}?provider=google", ['scope' => 'https://www.googleapis.com/auth/userinfo.profile'])
         ],
+        'github' => [
+            'connect' => 'Connect with Github',
+            'instance' => new Github(CLIENT_GITHUB_CLIENT_ID, CLIENT_GITHUB_SECRET, "${redirect_uri}?provider=github", [], CLIENT_GITHUB_APP)
+        ],
     ];
 }
 
+// Get user data with the function from the Provider Class
 function handleResponse(Provider $provider, array $request)
 {
     if (!$request['code']) die('Problem response');
@@ -58,7 +70,10 @@ function handleResponse(Provider $provider, array $request)
  * => EXCHANGE Code <> Token (auth-success)
  * => GET USER by Token (auth-success)
  */
+
+ // Load the env file
 loadDotEnv(ENV_PATH);
+// Get all providers
 $providers = getProviders();
 $route = strtok($_SERVER["REQUEST_URI"], '?');
 switch ($route) {

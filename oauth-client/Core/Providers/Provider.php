@@ -1,11 +1,17 @@
 <?php
 
 abstract class Provider {
+
     protected string $client_id;
+
     protected string $client_secret;
+
     protected string $token_url;
+
     protected string $redirect_uri;
+
     protected string $api_url;
+
     protected array $options;
 
     protected function __construct(string $client_id, string $client_secret, string $redirect_uri, array $options)
@@ -16,7 +22,7 @@ abstract class Provider {
         $this->options = $options;
     }
 
-    // With the code it send the token
+    // Return token with the code
     protected function getToken(string $code, bool $is_post = false)
     {
         $context = $is_post ? createContext('POST', ['Content-Type: application/x-www-form-urlencoded', 'Content-Length: 0', 'Accept: application/json']) : null;
@@ -31,6 +37,7 @@ abstract class Provider {
         return httpRequest($url, $context)['token'];
     }
 
+    // Create array with redirect url and the right options
     public function getAuthorizeUrl()
     {
         return createUrl($this->auth_url, array_merge([
@@ -41,7 +48,7 @@ abstract class Provider {
         $this->options));
     }
 
-    // Get user data with the provider
+    // Get user data with the identification token 
     public function getUser(string $params) {
         $token = $this->getToken($params);
         return $token ? httpRequest($this->api_url, createContext('GET', "Authorization: Bearer ${token}")) : false;

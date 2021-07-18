@@ -13,7 +13,7 @@ function createUrl(string $url, array $params = [])
     return $url . (!empty($params) ? '?' . http_build_query($params) : '');
 }
 
-// create headers
+// Create headers with the right method
 function createContext(string $method, $header)
 {
     return context([
@@ -24,6 +24,7 @@ function createContext(string $method, $header)
     ]);
 }
 
+// echo each user data
 function dd(...$data)
 {
     echo '<pre>';

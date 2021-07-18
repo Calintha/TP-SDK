@@ -1,5 +1,6 @@
 <?php
 
+// Get the rights constants from constants file for the provider
 class Facebook extends Provider {
     
     public function __construct(string $client_id, string $client_secret, string $redirect_uri, array $options = [])

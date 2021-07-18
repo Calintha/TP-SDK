@@ -1,8 +1,8 @@
 <?php
 
+// Get the rights constants from constants file for the provider
 class Google extends Provider
 {
-
     public function __construct(string $client_id, string $client_secret, string $redirect_uri, array $options = [])
     {
         parent::__construct($client_id, $client_secret, $redirect_uri, $options);

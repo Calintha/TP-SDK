@@ -1,5 +1,6 @@
 <?php
 
+// Verify if the .env exist/is not empty and read it
 function loadDotEnv(string $path)
 {
     if (!file_exists($path)) die("${path} doesn't exist");
