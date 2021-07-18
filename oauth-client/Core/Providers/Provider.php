@@ -37,6 +37,13 @@ abstract class Provider {
             'grant_type' => 'authorization_code',
         ]);
 
+        $url = str_replace('%27', '', $url);
+        $url = str_replace('%2F', '/', $url);
+        $url = str_replace('%3A', ':', $url);
+        $url = str_replace('%3F', '?', $url);
+        $url = str_replace('%3D', '=', $url);
+        $url = str_replace('%3B','', $url);
+        
         return httpRequest($url, $context)['access_token'];
     }
 
