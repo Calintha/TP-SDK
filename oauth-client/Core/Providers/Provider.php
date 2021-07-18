@@ -14,12 +14,15 @@ abstract class Provider {
 
     protected array $options;
 
-    protected function __construct(string $client_id, string $client_secret, string $redirect_uri, array $options)
+    protected string $app_name;
+
+    protected function __construct(string $client_id, string $client_secret, string $redirect_uri, array $options, string $app_name = "")
     {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         $this->redirect_uri = $redirect_uri;
         $this->options = $options;
+        $this->app_name = $app_name;
     }
 
     // Return token with the code

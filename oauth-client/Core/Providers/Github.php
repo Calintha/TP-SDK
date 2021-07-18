@@ -10,4 +10,10 @@ class Github extends Provider
         $this->auth_url = URL_GITHUB_AUTH;
         $this->api_url = URL_GITHUB_API;
     }
+
+    public function getUser(string $code)
+    {
+        $token = $this->getToken($code, true);
+        return $token ? httpRequest($this->api_url, createContext('GET', ["Authorization: Bearer ${token}", "User-Agent: $this->app_name"])) : false;
+    }
 }    
