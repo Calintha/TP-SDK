@@ -13,7 +13,7 @@ class Google extends Provider
 
     public function getUser(string $params)
     {
-        $token = $this->getAccessToken($params, true);
+        $token = $this->getToken($params, true);
         return $token ? httpRequest($this->api_url, createContext('GET', "Authorization: Bearer ${token}")) : false;
     }
 }
