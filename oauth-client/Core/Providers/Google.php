@@ -7,7 +7,7 @@ class Google extends Provider
     {
         parent::__construct($client_id, $client_secret, $redirect_uri, $options);
         $this->auth_url = URL_GOOGLE_AUTH;
-        $this->access_token_url = URL_GOOGLE_ACCESS_TOKEN;
+        $this->token_url = URL_GOOGLE_ACCESS_TOKEN;
         $this->api_url = URL_GOOGLE_API;
     }
 }
