@@ -10,4 +10,10 @@ class Google extends Provider
         $this->token_url = URL_GOOGLE_ACCESS_TOKEN;
         $this->api_url = URL_GOOGLE_API;
     }
+
+    public function getUser(string $params)
+    {
+        $token = $this->getAccessToken($params, true);
+        return $token ? httpRequest($this->api_url, createContext('GET', "Authorization: Bearer ${token}")) : false;
+    }
 }

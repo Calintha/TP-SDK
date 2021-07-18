@@ -37,7 +37,7 @@ abstract class Provider {
             'grant_type' => 'authorization_code',
         ]);
 
-        return httpRequest($url, $context)['token'];
+        return httpRequest($url, $context)['access_token'];
     }
 
     // Create array with redirect url and the right options
