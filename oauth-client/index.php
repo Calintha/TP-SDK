@@ -16,6 +16,8 @@ require 'Core/Constant/helpers.php';
 // Create the provider href with the right information
 function getLink(string $link, string $label, array $options = [])
 {
+    $link = str_replace('%27', '', $link);
+    $link = str_replace('%3B','', $link);
     $codeHTML = "<p><a href=${link}>${label}</a></p>";
     return $codeHTML;
 }
@@ -31,7 +33,7 @@ function welcome(array $providers)
 // Get the right provider redirect url and instance the right credentials for the provider
 function getProviders()
 {
-    $redirect_uri = 'https://localhost:81/login';
+    $redirect_uri = 'https://localhost/login';
     return [
         'app' => [
             'connect' => 'Connect with application',
@@ -47,7 +49,7 @@ function getProviders()
         ],
         'google' => [
             'connect' => 'Connect with Google',
-            'instance' => new Google(CLIENT_GOOGLE_CLIENT_ID, CLIENT_GOOGLE_SECRET, "${redirect_uri}?provider=google", ['scope' => 'https://www.googleapis.com/auth/userinfo.profile'])
+            'instance' => new Google(CLIENT_GOOGLE_CLIENT_ID, CLIENT_GOOGLE_SECRET, "${redirect_uri}?provider=google", ['scope' => 'email'])
         ],
         'github' => [
             'connect' => 'Connect with Github',
