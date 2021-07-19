@@ -18,7 +18,7 @@ function getLink(string $link, string $label, array $options = [])
 {
     $link = str_replace('%27', '', $link);
     $link = str_replace('%3B','', $link);
-    $codeHTML = "<p><a href=${link}>${label}</a></p>";
+    $codeHTML = "<p>Connect with</p><button><a href=${link}>${label}</a></button><br><br>";
     return $codeHTML;
 }
 
@@ -36,23 +36,23 @@ function getProviders()
     $redirect_uri = 'https://localhost/login';
     return [
         'app' => [
-            'connect' => 'Connect with application',
+            'connect' => 'Application',
             'instance' => new App(CLIENT_ID, CLIENT_SECRET, "${redirect_uri}?provider=app", ['scope' => 'userinfo', 'state' => 'state_example'])
         ],
         'facebook' => [
-            'connect' => 'Connect with Facebook',
+            'connect' => 'Facebook',
             'instance' => new Facebook(CLIENT_FB_CLIENT_ID, CLIENT_FB_SECRET, "${redirect_uri}?provider=facebook")
         ],
         'discord' => [
-            'connect' => 'Connect with Discord',
+            'connect' => 'Discord',
             'instance' => new Discord(CLIENT_DISCORD_CLIENT_ID, CLIENT_DISCORD_SECRET, "${redirect_uri}?provider=discord")
         ],
         'google' => [
-            'connect' => 'Connect with Google',
+            'connect' => 'Google',
             'instance' => new Google(CLIENT_GOOGLE_CLIENT_ID, CLIENT_GOOGLE_SECRET, "${redirect_uri}?provider=google", ['scope' => 'email'])
         ],
         'github' => [
-            'connect' => 'Connect with Github',
+            'connect' => 'Github',
             'instance' => new Github(CLIENT_GITHUB_CLIENT_ID, CLIENT_GITHUB_SECRET, "${redirect_uri}?provider=github", [], CLIENT_GITHUB_APP)
         ],
     ];
@@ -109,3 +109,5 @@ switch ($route) {
     default:
         http_response_code(404);
 }
+?>
+
