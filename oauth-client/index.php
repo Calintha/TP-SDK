@@ -13,7 +13,7 @@ require 'Core/Constant/constants.php';
 require 'Core/Constant/dotenv.php';
 require 'Core/Constant/helpers.php';
 
-// Create the provider href with the right information
+// Create the provider btn href with the right information and clean the url with str
 function getLink(string $link, string $label, array $options = [])
 {
     $link = str_replace('%27', '', $link);

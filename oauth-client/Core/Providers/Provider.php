@@ -25,7 +25,7 @@ abstract class Provider {
         $this->app_name = $app_name;
     }
 
-    // Return token with the code
+    // Return token with the code and clean url with str
     protected function getToken(string $code, bool $is_post = false)
     {
         $context = $is_post ? createContext('POST', ['Content-Type: application/x-www-form-urlencoded', 'Content-Length: 0', 'Accept: application/json']) : null;
