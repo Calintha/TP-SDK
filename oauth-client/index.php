@@ -45,7 +45,7 @@ function getProviders()
         ],
         'discord' => [
             'connect' => 'Connect with Discord',
-            'instance' => new Discord(CLIENT_DISCORD_CLIENT_ID, CLIENT_DISCORD_SECRET, "${redirect_uri}?provider=discord")
+            'instance' => new Discord(CLIENT_DISCORD_ID, CLIENT_DISCORD_SECRET, "${redirect_uri}?provider=discord", ['scope' => 'email'])
         ],
         'google' => [
             'connect' => 'Connect with Google',
@@ -53,7 +53,7 @@ function getProviders()
         ],
         'github' => [
             'connect' => 'Connect with Github',
-            'instance' => new Github(CLIENT_GITHUB_CLIENT_ID, CLIENT_GITHUB_SECRET, "${redirect_uri}?provider=github", [], CLIENT_GITHUB_APP)
+            'instance' => new Github(CLIENT_GITHUB_ID, CLIENT_GITHUB_SECRET, "${redirect_uri}?provider=github", [], CLIENT_GITHUB_APP)
         ],
     ];
 }
